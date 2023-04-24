@@ -38,7 +38,7 @@ pub enum UniswapProvider {
 impl UniswapProvider {
     pub fn from_str(s: &str) -> Option<Self> {
         match s {
-            "pancakeswap" => Some(Self::PancakeSwap),
+            "pancakeswap" | "pancake" => Some(Self::PancakeSwap),
             "sushiswap" => Some(Self::SushiSwap),
             "uniswapv2" => Some(Self::UniswapV2),
             "uniswapv3" => Some(Self::UniswapV3),

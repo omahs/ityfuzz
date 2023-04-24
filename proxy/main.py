@@ -65,7 +65,7 @@ def get_rpc(network):
     elif network == "bsc":
         # BSC mod to geth make it no longer possible to use debug_storageRangeAt
         # so, we use our own node that supports eth_getStorageAll
-        return "https://bsc-dataseed2.ninicoin.io/" # "http://bsc.node1.infra.fuzz.land:4949"
+        return "http://10.0.0.71"
     elif network == "polygon":
         return "https://polygon-rpc.com/"
     elif network == "mumbai":
@@ -391,6 +391,13 @@ def find_path_subgraph(network, token, block):
     return with_info(routes, network, token)
 
 
+
+def find_path_local(network, token, block):
+    resp = requests.get(
+        f"http://localhost:5004/swap_path/{network}/{token}/{block}")
+    return json.loads(resp.text)
+
+
 # for path in (find_path("0x056fd409e1d7a124bd7017459dfea2f387b6d5cd", "eth", "16399064")):
 #     print(path)
 
@@ -618,8 +625,11 @@ def price(network, token_address):
 
 @app.route("/swap_path/<network>/<token_address>/<block>", methods=["GET"])
 def swap_path(network, token_address, block):
-    return flask.jsonify(find_path_subgraph(network, token_address.lower(), block))
+    return flask.jsonify(find_path_local(network, token_address.lower(), block))
 
+@app.route("/swap_path2/<network>/<token_address>/<block>", methods=["GET"])
+def swap_path2(network, token_address, block):
+    return flask.jsonify(find_path_subgraph(network, token_address.lower(), block))
 
 if __name__ == "__main__":
     app.run(port=5003)
